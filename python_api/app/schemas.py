@@ -4,42 +4,52 @@ from pydantic import BaseModel
 
 
 class UserBase(BaseModel):
-    it: int
+    username: str
     email: str
     password: str
-    username: str
     type: str
 
 
-class User(BaseModel):
-    email: str
+class UserProfile(BaseModel):
+    id: int
     username: str
+    email: str
+    password: str
     type: str
 
 
-class UserCreate(User):
+class UserOut(BaseModel):
+    username: str
+    email: str
+    type: str
+
+    class Config:
+        exclude = ["password"]
+
+
+class UserResponseModel(BaseModel):
+    email: str
+    username: str
+    id: int
+
+
+class UserCreate(BaseModel):
+    username: str
+    email: str
     password: str
+    type: str
 
 
 class UserUpdate(BaseModel):
-    email: str = None
-    username: str = None
-    password: str = None
-    type: str = None
+    email: Optional[str] = None
+    username: Optional[str] = None
+    password: Optional[str] = None
+    type: Optional[str] = None
 
 
 class UserLogin(BaseModel):
     email: str
     password: str
-
-
-class User(UserBase):
-    password: str
-    id: int
-    created_date: datetime.datetime
-
-    class Config:
-        from_attributes = True
 
 
 class Token(BaseModel):

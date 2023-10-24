@@ -18,6 +18,7 @@ def login(user_credentials: schemas.UserLogin, db: Session = Depends(database.ge
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Invalid Credentials")
 
-    access_token = oauth2.create_access_token(data={"id": user.id})
+    access_token = oauth2.create_access_token(
+        data={"id": user.id})
 
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "bearer", "user_type": user.type}

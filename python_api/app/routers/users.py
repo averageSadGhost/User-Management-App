@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from .. import schemas, database, models, utils, oauth2
+from typing import List
 
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -8,14 +9,14 @@ router = APIRouter(prefix="/users", tags=["Users"])
 
 @router.get("/me")
 def get_current_user_data(
-    current_user: schemas.UserBase = Depends(oauth2.get_current_user)
+    current_user: schemas.UserProfile = Depends(oauth2.get_current_user)
 ):
     return current_user
 
 
-@router.get("/",)
+@router.get("/", response_model=List[schemas.UserResponseModel])
 def get_all_users(
-    current_user: schemas.UserBase = Depends(oauth2.get_current_user),
+    current_user: schemas.UserOut = Depends(oauth2.get_current_user),
     db: Session = Depends(database.get_db)
 ):
     # Check the user type to determine which users to return
@@ -35,10 +36,41 @@ def get_all_users(
             status_code=status.HTTP_403_FORBIDDEN, detail="Permission denied"
         )
 
-    return users
+    # Create a list of UserResponseModel instances
+    users_data = [
+        schemas.UserResponseModel(
+            email=user.email, username=user.username, id=user.id)
+        for user in users
+    ]
+
+    return users_data
 
 
-@router.post("/create", response_model=schemas.UserBase, status_code=status.HTTP_201_CREATED)
+@router.get("/{user_id}")
+def get_user_by_id(
+    user_id: int,
+    db: Session = Depends(database.get_db),
+    current_user: schemas.UserProfile = Depends(oauth2.get_current_user)
+):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+
+    # Check if the current user has permission to access this user's data
+    if not utils.check_access_control(current_user.type, user.type):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Permission denied"
+        )
+
+    return user
+
+
+@router.post("/create", status_code=status.HTTP_201_CREATED)
 def register_user(
     user: schemas.UserCreate,
     db: Session = Depends(database.get_db),
@@ -62,10 +94,9 @@ def register_user(
     # Add the user to the database
     db.add(new_user)
     db.commit()
-    db.refresh(new_user)
+    # db.refresh(new_user)
 
-    # Create a UserBase response model
-    user_base = schemas.UserBase(
+    user_base = schemas.UserOut(
         id=new_user.id,
         username=new_user.username,
         email=new_user.email,
