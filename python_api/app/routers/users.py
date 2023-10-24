@@ -7,14 +7,14 @@ from typing import List
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
-@router.get("/me")
+@router.get("/me", summary="Get the current user data", description="Get the current authenticated user data")
 def get_current_user_data(
     current_user: schemas.UserProfile = Depends(oauth2.get_current_user)
 ):
     return current_user
 
 
-@router.get("/", response_model=List[schemas.UserResponseModel])
+@router.get("/", response_model=List[schemas.UserResponseModel], summary="Get list of all avilabe users", description="Get list of all avilabe users depending on the current authenticated user")
 def get_all_users(
     current_user: schemas.UserOut = Depends(oauth2.get_current_user),
     db: Session = Depends(database.get_db)
@@ -46,7 +46,7 @@ def get_all_users(
     return users_data
 
 
-@router.get("/{user_id}")
+@router.get("/{user_id}", summary="Get user by id", description="Get a user by his id depending on the current authenticated user")
 def get_user_by_id(
     user_id: int,
     db: Session = Depends(database.get_db),
@@ -70,7 +70,7 @@ def get_user_by_id(
     return user
 
 
-@router.post("/create", status_code=status.HTTP_201_CREATED)
+@router.post("/create", status_code=status.HTTP_201_CREATED,  summary="Create a new user", description="Create a new user, depending on the current authenticated user")
 def register_user(
     user: schemas.UserCreate,
     db: Session = Depends(database.get_db),
@@ -106,7 +106,7 @@ def register_user(
     return user_base
 
 
-@router.put("/{user_id}")
+@router.put("/{user_id}", summary="Update user by id", description=" Update a user by his id, depending on the current authenticated user")
 def update_user_data(
     user_id: int,
     updated_user: schemas.UserUpdate,
@@ -140,7 +140,7 @@ def update_user_data(
     return user_to_update
 
 
-@router.delete("/{user_id}")
+@router.delete("/{user_id}", summary="Delete user by id", description=" Delete a user by his id, depending on the current authenticated user")
 def delete_user(
     user_id: int,
     db: Session = Depends(database.get_db),

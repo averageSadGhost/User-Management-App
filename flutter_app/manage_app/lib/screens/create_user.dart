@@ -84,7 +84,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                 ),
               )
             else
-              Text(
+              const Text(
                 'As a tutor, you can only add students.',
                 style: TextStyle(color: Colors.grey),
               ),

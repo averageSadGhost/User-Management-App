@@ -13,9 +13,7 @@ start_time = time.time()
 
 @app.get("/", tags=["Main"], summary="Main route & Uptime", description="Check the server's uptime.")
 def root():
-    """
-    Check the server's uptime.
-    """
+
 
     uptime_string = utils.get_up_time(start_time)
 

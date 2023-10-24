@@ -5,7 +5,7 @@ from .. import schemas, database, models, utils, oauth2
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
-@router.post("/login")
+@router.post("/login", summary="Login user by email and password", description="Login a user and send a JWT token to authenticate him")
 def login(user_credentials: schemas.UserLogin, db: Session = Depends(database.get_db)):
 
     user = db.query(models.User).filter(
