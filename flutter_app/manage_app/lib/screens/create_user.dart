@@ -19,6 +19,19 @@ class _AddUserScreenState extends State<AddUserScreen> {
   final TextEditingController passwordController = TextEditingController();
 
   String? selectedRole; // Store the selected role
+  String? currentUserType;
+
+  @override
+  void initState() {
+    super.initState();
+    currentUserType = Get.find<TokenController>()
+        .getToken()['type']; // Get the current user's type
+
+    // Set selectedRole to "student" if the currentUserType is "tutor"
+    if (currentUserType == 'tutor') {
+      selectedRole = 'student';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,31 +56,38 @@ class _AddUserScreenState extends State<AddUserScreen> {
               decoration: const InputDecoration(labelText: 'Password'),
             ),
             const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: selectedRole,
-              items: const [
-                DropdownMenuItem<String>(
-                  value: 'student',
-                  child: Text('Student'),
+            // Conditionally display the role dropdown based on user type
+            if (selectedRole == null || currentUserType != 'tutor')
+              DropdownButtonFormField<String>(
+                value: selectedRole,
+                items: const [
+                  DropdownMenuItem<String>(
+                    value: 'student',
+                    child: Text('Student'),
+                  ),
+                  DropdownMenuItem<String>(
+                    value: 'admin',
+                    child: Text('Admin'),
+                  ),
+                  DropdownMenuItem<String>(
+                    value: 'tutor',
+                    child: Text('Tutor'),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    selectedRole = value;
+                  });
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Role',
                 ),
-                DropdownMenuItem<String>(
-                  value: 'admin',
-                  child: Text('Admin'),
-                ),
-                DropdownMenuItem<String>(
-                  value: 'tutor',
-                  child: Text('Tutor'),
-                ),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  selectedRole = value;
-                });
-              },
-              decoration: const InputDecoration(
-                labelText: 'Role',
+              )
+            else
+              Text(
+                'As a tutor, you can only add students.',
+                style: TextStyle(color: Colors.grey),
               ),
-            ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () async {

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import 'package:manage_app/screens/admin_or_tutor.dart';
 import 'package:manage_app/screens/student_screen.dart';
-
 import 'package:manage_app/controllers.dart';
 import 'package:manage_app/utils.dart';
 
@@ -44,7 +43,14 @@ class LoginPage extends StatelessWidget {
         }
       }
     } catch (e) {
-      debugPrint('Error: $e');
+      final error = e as DioError;
+      final errorMessage = error.response?.data['error'] ?? 'An error occurred';
+      Get.snackbar(
+        'Error',
+        errorMessage,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 
