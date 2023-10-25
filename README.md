@@ -35,17 +35,19 @@ The User Management App is a project that combines a FastAPI backend for user ma
 
 ### Backend Setup
 
-1. Navigate to the `backend` directory.
+1. Navigate to the `User-Management-App` directory.
 2. Create a virtual environment: `python -m venv venv`.
 3. Activate the virtual environment:
    - On Windows: `venv\Scripts\activate`
    - On macOS and Linux: `source venv/bin/activate`
 4. Install the required packages: `pip install -r requirements.txt`.
-5. Start the FastAPI server: `uvicorn main:app --host 0.0.0.0 --port 8000`.
+5. Start the FastAPI server: `uvicorn python_api.app.main:app --host 0.0.0.0 --port 8000`.
 
 ### Flutter App Setup
 
-1. Navigate to the `frontend` directory.
+1. Navigate to the `User-Management-App/flutter_app
+/manage_app/
+` directory.
 2. Run `flutter pub get` to fetch the app's dependencies.
 3. If you are on android emulator, you should change the url found in utils.dart from `http://127.0.0.1:8000` to `http://10.0.2.2:8000` both can be found in the utils.dart
 4. Start the Flutter app: `flutter run`.
