@@ -35,7 +35,7 @@ The User Management App is a project that combines a FastAPI backend for user ma
 
 ### Backend Setup
 
-1. Navigate to the `User-Management-App` directory.
+1. Navigate to the `User-Management-App/python_api` directory.
 2. Create a virtual environment: `python -m venv venv`.
 3. Activate the virtual environment:
    - On Windows: `venv\Scripts\activate`
