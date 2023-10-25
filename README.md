@@ -57,3 +57,4 @@ The User Management App is a project that combines a FastAPI backend for user ma
 - Access the FastAPI Swagger documentation at `http://localhost:8000/docs` to explore and interact with the backend API.
 - Launch the Flutter app on an emulator or physical device to use the frontend.
 - Log in as an administrator or tutor to manage users.
+- Some accounts i created, email: admin@email.com passwrod: admin, email: tutor@email.com password: tutor, email: student@email.com password: student
